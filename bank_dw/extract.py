@@ -191,6 +191,21 @@ def extract_all(
     return manifest
 
 
+def extract_age_days(output_dir: Path = DEFAULT_OUTPUT_DIR, now: datetime | None = None):
+    """Days since the last complete extraction (read in the manifest), or None if there is none.
+
+    The source is a frozen research dataset: the daily pipeline re-downloads it (about 8 minutes)
+    only when the copy is old, to be polite with the public server.
+    """
+    path = output_dir / MANIFEST_NAME
+    if not path.exists():
+        return None
+    extracted_at = datetime.fromisoformat(
+        json.loads(path.read_text(encoding="utf-8"))["extracted_at"]
+    )
+    return ((now or datetime.now(UTC)) - extracted_at).total_seconds() / 86400
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Extract the Berka tables to Parquet files.")
     parser.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT_DIR)

@@ -236,3 +236,17 @@ def test_tables_list_has_the_8_berka_tables():
 def test_main_rejects_unknown_table():
     with pytest.raises(SystemExit):
         extract.main(["--tables", "customers"])
+
+
+# --- age of the last extraction (used by the Airflow DAG) -----------------------------------
+
+
+def test_extract_age_days_without_manifest_is_none(tmp_path):
+    assert extract.extract_age_days(tmp_path) is None
+
+
+def test_extract_age_days_reads_the_manifest(tmp_path):
+    manifest = {"extracted_at": "2026-11-01T00:00:00+00:00", "tables": {}}
+    (tmp_path / extract.MANIFEST_NAME).write_text(json.dumps(manifest), encoding="utf-8")
+    now = dt.datetime(2026, 11, 4, 12, 0, tzinfo=dt.UTC)
+    assert extract.extract_age_days(tmp_path, now) == pytest.approx(3.5)

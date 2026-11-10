@@ -171,3 +171,26 @@ def test_load_all_rolls_back_everything_on_error(pg, tmp_path):
     # the tables of the first load are still there, untouched
     assert _query(conn, f'select count(*) from "{schema}"."order"') == [(3,)]
     assert _query(conn, f'select count(*) from "{schema}"._load_log') == [(2,)]
+
+
+@pytest.mark.postgres
+def test_load_all_works_when_a_view_depends_on_a_raw_table(pg, tmp_path):
+    """Regression: the dbt staging views use the raw tables (first Airflow run failed)."""
+    conn, schema = pg
+    _write_raw(tmp_path)
+    load.load_all(conn, tmp_path, schema)
+    with conn, conn.cursor() as cur:
+        cur.execute(f'create view "{schema}".v_order as select * from "{schema}"."order"')
+    load.load_all(conn, tmp_path, schema)  # must not fail
+    assert _query(conn, f'select count(*) from "{schema}".v_order') == [(3,)]
+
+
+@pytest.mark.postgres
+def test_load_all_refuses_a_changed_structure(pg, tmp_path):
+    conn, schema = pg
+    _write_raw(tmp_path)
+    load.load_all(conn, tmp_path, schema)
+    with conn, conn.cursor() as cur:
+        cur.execute(f'alter table "{schema}".district add column extra text')
+    with pytest.raises(load.LoadError, match="columns"):
+        load.load_all(conn, tmp_path, schema)

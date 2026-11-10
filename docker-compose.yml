@@ -1,5 +1,6 @@
-# Data warehouse database. Start it with:  docker compose up -d
-# Settings (user, password, port) come from the .env file (copy .env.example).
+# The whole warehouse with one command:
+#   docker compose up -d --build      then open http://localhost:8081 (Airflow)
+# Settings (users, passwords, ports) come from the .env file (copy .env.example).
 services:
   postgres:
     image: postgres:17-alpine
@@ -11,11 +12,38 @@ services:
       - "${WAREHOUSE_PG_PORT:-5434}:5432"  # 5434 on this PC: 5432 and 5433 are already used
     volumes:
       - pgdata:/var/lib/postgresql/data  # the data survives "docker compose down"
+      - ./docker/postgres-init:/docker-entrypoint-initdb.d:ro  # creates the "airflow" database
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
       interval: 5s
       timeout: 5s
       retries: 10
+    restart: unless-stopped
+
+  airflow:
+    build:
+      context: .
+      dockerfile: docker/airflow.Dockerfile
+    command: standalone  # web UI + scheduler in one container: enough on a laptop
+    depends_on:
+      postgres:
+        condition: service_healthy
+    env_file: .env  # BERKA_* (source) and WAREHOUSE_PG_* (warehouse) settings
+    environment:
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://${WAREHOUSE_PG_USER}:${WAREHOUSE_PG_PASSWORD}@postgres:5432/airflow
+      AIRFLOW__CORE__EXECUTOR: LocalExecutor
+      AIRFLOW__CORE__LOAD_EXAMPLES: "false"
+      AIRFLOW__CORE__DAGS_FOLDER: /opt/project/airflow/dags
+      AIRFLOW__CORE__SIMPLE_AUTH_MANAGER_ALL_ADMINS: "true"  # local only: no login screen
+      PYTHONPATH: /opt/project
+      # inside Docker, the warehouse is reached by its service name, on the inner port
+      WAREHOUSE_PG_HOST: postgres
+      WAREHOUSE_PG_PORT: "5432"
+      DBT_EXECUTABLE: /home/airflow/dbt-venv/bin/dbt
+    volumes:
+      - ./:/opt/project  # the project code, the DAG and data/raw
+    ports:
+      - "8081:8080"  # 8081 on this PC: 8080 is used by another project
     restart: unless-stopped
 
 volumes:

@@ -3,7 +3,7 @@
 The table content is copied as is (same rows, same values); only the column names are
 put in lower case (A2 -> a2), so that SQL queries do not need quotes.
 
-Each run replaces the raw tables inside ONE transaction: if anything fails, PostgreSQL
+Each run empties and refills the raw tables inside ONE transaction: if anything fails, PostgreSQL
 cancels everything and the previous tables stay untouched (all or nothing).
 Running it twice gives the same tables (idempotent). Each run also adds one line per
 table to raw._load_log (history of the loads).
@@ -120,12 +120,36 @@ def ensure_schema(cur, schema: str) -> None:
     )
 
 
+def existing_columns(cur, schema: str, table: str) -> list[str] | None:
+    """Column names of an existing table, in order; None if the table does not exist."""
+    cur.execute(
+        "select column_name from information_schema.columns"
+        " where table_schema = %s and table_name = %s order by ordinal_position",
+        (schema, table),
+    )
+    columns = [row[0] for row in cur.fetchall()]
+    return columns or None
+
+
 def load_table(cur, schema: str, table: str, path: Path) -> int:
-    """Replace <schema>.<table> by the content of the Parquet file; return the row count."""
+    """Replace the content of <schema>.<table> by the Parquet file; return the row count.
+
+    The table is emptied (TRUNCATE), not dropped: the dbt staging views depend on it, and
+    PostgreSQL refuses to drop a table that a view uses.
+    """
     data = pq.read_table(path)
     target = sql.SQL("{}.{}").format(sql.Identifier(schema), sql.Identifier(table))
-    cur.execute(sql.SQL("drop table if exists {}").format(target))
-    cur.execute(create_table_sql(schema, table, data.schema))
+    expected = [name.lower() for name in data.schema.names]
+    columns = existing_columns(cur, schema, table)
+    if columns is None:
+        cur.execute(create_table_sql(schema, table, data.schema))
+    elif columns != expected:
+        raise LoadError(
+            f"{schema}.{table} has columns {columns}, the file has {expected}. "
+            "Drop the table (and the dbt views on it) before loading a new structure."
+        )
+    else:
+        cur.execute(sql.SQL("truncate table {}").format(target))
     copy = sql.SQL("copy {} from stdin with (format csv)").format(target)
     cur.copy_expert(copy.as_string(cur), to_csv(data))
     cur.execute(sql.SQL("select count(*) from {}").format(target))
