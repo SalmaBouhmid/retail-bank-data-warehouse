@@ -1,0 +1,19 @@
+# Personal folder (interview notes) - never published
+pour_moi/
+
+# Secrets
+.env
+
+# Raw extract (recreated by: python -m bank_dw.extract)
+data/raw/
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+.venv/
+venv/
+
+# Claude Code local settings
+.claude/
