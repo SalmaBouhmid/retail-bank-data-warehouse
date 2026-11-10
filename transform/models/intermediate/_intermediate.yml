@@ -1,0 +1,51 @@
+version: 2
+
+models:
+  - name: int_account_owners
+    description: Owner and number of clients of each account.
+    columns:
+      - name: account_id
+        data_tests: [unique, not_null]
+      - name: owner_client_id
+        description: Every account has exactly one owner.
+        data_tests: [not_null, unique]
+
+  - name: int_account_cards
+    description: Number of cards and best card type per account (accounts with a card only).
+    columns:
+      - name: account_id
+        data_tests: [unique, not_null]
+
+  - name: int_daily_balances
+    description: >
+      End-of-day balance per account and per active day. The last transaction of a day is found
+      by chaining balances (balance_after - signed_amount = balance before), not by transaction_id.
+    data_tests:
+      - unique:
+          arguments:
+            column_name: "account_id || '-' || balance_date"
+    columns:
+      - name: end_of_day_balance
+        data_tests: [not_null]
+      - name: balance_rule
+        data_tests:
+          - accepted_values:
+              arguments: {values: [single_transaction, chaining, fallback_highest_id]}
+
+  - name: int_account_monthly_balances
+    description: One row per account and month, months without activity included (balance carried over).
+    data_tests:
+      - unique:
+          arguments:
+            column_name: "account_id || '-' || month_start"
+    columns:
+      - name: month_end_balance
+        data_tests: [not_null]
+
+  - name: int_loan_pre_loan_features
+    description: >
+      Indicators per loan computed ONLY with data dated before the loan (no data leak).
+      Checked by tests/assert_pre_loan_features_*.sql.
+    columns:
+      - name: loan_id
+        data_tests: [unique, not_null]

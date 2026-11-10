@@ -1,0 +1,143 @@
+version: 2
+
+# Star schema read by Power BI.
+#   Dimensions (who / where / when): dim_client, dim_account, dim_district, dim_date
+#   Facts (what happened, with amounts): fct_transactions, fct_monthly_balance, fct_loans, fct_cards
+# Every fact key is tested with "relationships" towards its dimension.
+
+models:
+  - name: dim_date
+    description: Calendar, one row per day from 1993-01-01 to 1998-12-31 (period of the data).
+    columns:
+      - name: date_day
+        data_tests: [unique, not_null]
+
+  - name: dim_district
+    description: The 77 districts with their demographic data (1995-1996).
+    columns:
+      - name: district_id
+        data_tests: [unique, not_null]
+
+  - name: dim_client
+    description: One row per client. Ages at the reference date 1998-12-31 (end of the data).
+    columns:
+      - name: client_id
+        data_tests: [unique, not_null]
+      - name: gender
+        data_tests:
+          - accepted_values:
+              arguments: {values: [F, M]}
+      - name: age_band
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments: {values: ["under 18", "18-24", "25-34", "35-44", "45-54", "55-64", "65+"]}
+      - name: district_id
+        data_tests:
+          - relationships:
+              arguments: {to: ref('dim_district'), field: district_id}
+      - name: best_card_type
+        data_tests:
+          - accepted_values:
+              arguments: {values: [none, junior, classic, gold]}
+
+  - name: dim_account
+    description: One row per account, with its owner, branch district and products.
+    columns:
+      - name: account_id
+        data_tests: [unique, not_null]
+      - name: owner_client_id
+        data_tests:
+          - not_null
+          - relationships:
+              arguments: {to: ref('dim_client'), field: client_id}
+      - name: district_id
+        data_tests:
+          - relationships:
+              arguments: {to: ref('dim_district'), field: district_id}
+      - name: opened_on
+        data_tests:
+          - relationships:
+              arguments: {to: ref('dim_date'), field: date_day}
+
+  - name: fct_transactions
+    description: One row per transaction. signed_amount < 0 for debits. Amounts in CZK.
+    columns:
+      - name: transaction_id
+        data_tests: [unique, not_null]
+      - name: account_id
+        data_tests:
+          - relationships:
+              arguments: {to: ref('dim_account'), field: account_id}
+      - name: owner_client_id
+        data_tests:
+          - relationships:
+              arguments: {to: ref('dim_client'), field: client_id}
+      - name: district_id
+        data_tests:
+          - relationships:
+              arguments: {to: ref('dim_district'), field: district_id}
+      - name: transaction_date
+        data_tests:
+          - not_null
+          - relationships:
+              arguments: {to: ref('dim_date'), field: date_day}
+
+  - name: fct_monthly_balance
+    description: One row per account and month (month-end balance carried over when there is no activity).
+    data_tests:
+      - unique:
+          arguments:
+            column_name: "account_id || '-' || month_start"
+    columns:
+      - name: account_id
+        data_tests:
+          - relationships:
+              arguments: {to: ref('dim_account'), field: account_id}
+      - name: month_start
+        data_tests:
+          - not_null
+          - relationships:
+              arguments: {to: ref('dim_date'), field: date_day}
+      - name: month_end_balance
+        data_tests: [not_null]
+
+  - name: fct_loans
+    description: >
+      One row per loan, with its status (default = B or D) and indicators known BEFORE the loan
+      (columns ending in _before, plus client_age_at_loan and had_card_before_loan).
+    columns:
+      - name: loan_id
+        data_tests: [unique, not_null]
+      - name: account_id
+        data_tests:
+          - relationships:
+              arguments: {to: ref('dim_account'), field: account_id}
+      - name: owner_client_id
+        data_tests:
+          - relationships:
+              arguments: {to: ref('dim_client'), field: client_id}
+      - name: granted_on
+        data_tests:
+          - relationships:
+              arguments: {to: ref('dim_date'), field: date_day}
+      - name: is_default
+        data_tests: [not_null]
+
+  - name: fct_cards
+    description: One row per card issued.
+    columns:
+      - name: card_id
+        data_tests: [unique, not_null]
+      - name: client_id
+        data_tests:
+          - relationships:
+              arguments: {to: ref('dim_client'), field: client_id}
+      - name: account_id
+        data_tests:
+          - relationships:
+              arguments: {to: ref('dim_account'), field: account_id}
+      - name: issued_on
+        data_tests:
+          - relationships:
+              arguments: {to: ref('dim_date'), field: date_day}

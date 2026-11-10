@@ -15,7 +15,19 @@ models:
     staging:
       +schema: staging
       +materialized: view   # staging = renamed and typed copy of raw: a view is enough
+    intermediate:
+      +schema: intermediate
+      +materialized: view
+    marts:
+      +schema: marts
+      +materialized: table  # marts are read by Power BI: stored as real tables
 
 seeds:
   bank_dw:
     +schema: reference
+
+vars:
+  # Last day of the data (max transaction date, checked on 2026-11-10). Ages and seniority
+  # are computed at this date, not at "today": the data stops at the end of 1998.
+  reference_date: "1998-12-31"
+  first_date: "1993-01-01"
