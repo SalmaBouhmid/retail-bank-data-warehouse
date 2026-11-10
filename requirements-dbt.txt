@@ -1,0 +1,5 @@
+# Installed in the project .venv (not in Anaconda):
+#   python -m venv .venv
+#   .venv\Scripts\python -m pip install -r requirements-dbt.txt
+dbt-core==1.12.6
+dbt-postgres==1.11.0

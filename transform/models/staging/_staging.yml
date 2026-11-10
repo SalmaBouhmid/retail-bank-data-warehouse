@@ -1,0 +1,189 @@
+version: 2
+
+# Tests used here (all built into dbt):
+#   unique, not_null      -> the key identifies each row exactly once
+#   relationships         -> every foreign key points to an existing row (no orphan)
+#   accepted_values       -> a code only takes the values we know
+# A translated label tested "not_null where the code is not null" = every code found
+# in the data has a translation in the seed czech_codes.
+
+models:
+  - name: stg_accounts
+    description: One row per bank account.
+    columns:
+      - name: account_id
+        data_tests: [unique, not_null]
+      - name: district_id
+        description: District of the branch.
+        data_tests:
+          - not_null
+          - relationships:
+              arguments: {to: ref('stg_districts'), field: district_id}
+      - name: opened_on
+        data_tests: [not_null]
+      - name: statement_frequency
+        data_tests:
+          - accepted_values:
+              arguments: {values: [monthly, weekly, after_transaction]}
+          - not_null
+
+  - name: stg_clients
+    description: One row per client.
+    columns:
+      - name: client_id
+        data_tests: [unique, not_null]
+      - name: gender
+        data_tests:
+          - accepted_values:
+              arguments: {values: [F, M]}
+          - not_null
+      - name: birth_date
+        data_tests: [not_null]
+      - name: district_id
+        description: District of the client's address.
+        data_tests:
+          - relationships:
+              arguments: {to: ref('stg_districts'), field: district_id}
+
+  - name: stg_dispositions
+    description: Link client <-> account, with the role of the client (owner or user).
+    columns:
+      - name: disp_id
+        data_tests: [unique, not_null]
+      - name: client_id
+        data_tests:
+          - not_null
+          - relationships:
+              arguments: {to: ref('stg_clients'), field: client_id}
+      - name: account_id
+        data_tests:
+          - not_null
+          - relationships:
+              arguments: {to: ref('stg_accounts'), field: account_id}
+      - name: disposition_type
+        data_tests:
+          - accepted_values:
+              arguments: {values: [owner, user]}
+          - not_null
+
+  - name: stg_cards
+    description: One row per credit card.
+    columns:
+      - name: card_id
+        data_tests: [unique, not_null]
+      - name: disp_id
+        data_tests:
+          - not_null
+          - relationships:
+              arguments: {to: ref('stg_dispositions'), field: disp_id}
+      - name: card_type
+        data_tests:
+          - accepted_values:
+              arguments: {values: [junior, classic, gold]}
+          - not_null
+
+  - name: stg_districts
+    description: Demographic data of the 77 districts (names of the A2...A16 columns from the PKDD'99 guide).
+    columns:
+      - name: district_id
+        data_tests: [unique, not_null]
+      - name: district_name
+        description: A2 district name
+        data_tests: [not_null]
+      - name: region
+        description: A3 region
+        data_tests: [not_null]
+      - name: inhabitants
+        description: A4 number of inhabitants
+      - name: municipalities_under_500
+        description: A5 number of municipalities with less than 500 inhabitants (guide says "< 499")
+      - name: municipalities_500_1999
+        description: A6 number of municipalities with 500-1999 inhabitants
+      - name: municipalities_2000_9999
+        description: A7 number of municipalities with 2000-9999 inhabitants
+      - name: municipalities_10000_plus
+        description: A8 number of municipalities with more than 10000 inhabitants
+      - name: cities
+        description: A9 number of cities
+      - name: urban_ratio_pct
+        description: A10 ratio of urban inhabitants (%)
+      - name: average_salary
+        description: A11 average salary (CZK)
+      - name: unemployment_rate_1995
+        description: A12 unemployment rate 1995 (%); 1 district has no value
+      - name: unemployment_rate_1996
+        description: A13 unemployment rate 1996 (%)
+      - name: entrepreneurs_per_1000
+        description: A14 number of entrepreneurs per 1000 inhabitants
+      - name: crimes_1995
+        description: A15 number of committed crimes 1995; 1 district has no value
+      - name: crimes_1996
+        description: A16 number of committed crimes 1996
+
+  - name: stg_loans
+    description: One row per loan. amount = monthly_payment x duration_months for every loan.
+    columns:
+      - name: loan_id
+        data_tests: [unique, not_null]
+      - name: account_id
+        data_tests:
+          - not_null
+          - unique  # at most one loan per account in this data
+          - relationships:
+              arguments: {to: ref('stg_accounts'), field: account_id}
+      - name: granted_on
+        data_tests: [not_null]
+      - name: status_code
+        data_tests:
+          - accepted_values:
+              arguments: {values: [A, B, C, D]}
+          - not_null
+      - name: loan_status
+        data_tests: [not_null]
+      - name: is_default
+        description: true if status B (finished, not paid) or D (running, client in debt).
+        data_tests: [not_null]
+
+  - name: stg_orders
+    description: Permanent orders (always debits).
+    columns:
+      - name: order_id
+        data_tests: [unique, not_null]
+      - name: account_id
+        data_tests:
+          - not_null
+          - relationships:
+              arguments: {to: ref('stg_accounts'), field: account_id}
+      - name: payment_type
+        description: Translated k_symbol; null when the raw code is blank.
+        data_tests:
+          - not_null:
+              config: {where: "payment_type_code is not null"}
+
+  - name: stg_transactions
+    description: One row per transaction. signed_amount is negative for debits.
+    columns:
+      - name: transaction_id
+        data_tests: [unique, not_null]
+      - name: account_id
+        data_tests:
+          - not_null
+          - relationships:
+              arguments: {to: ref('stg_accounts'), field: account_id}
+      - name: transaction_date
+        data_tests: [not_null]
+      - name: direction
+        data_tests:
+          - accepted_values:
+              arguments: {values: [credit, debit]}
+          - not_null
+      - name: operation
+        description: Translated operation; null when the raw code is missing.
+        data_tests:
+          - not_null:
+              config: {where: "operation_code is not null"}
+      - name: payment_type
+        description: Translated k_symbol; null when the raw code is blank or missing.
+        data_tests:
+          - not_null:
+              config: {where: "payment_type_code is not null"}

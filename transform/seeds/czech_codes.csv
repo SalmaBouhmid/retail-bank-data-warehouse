@@ -1,0 +1,26 @@
+domain,code,label,label_fr,description,source
+account_frequency,POPLATEK MESICNE,monthly,relevé mensuel,monthly issuance of statements,pkdd99_guide
+account_frequency,POPLATEK TYDNE,weekly,relevé hebdomadaire,weekly issuance of statements,pkdd99_guide
+account_frequency,POPLATEK PO OBRATU,after_transaction,relevé après opération,issuance of statements after a transaction,pkdd99_guide
+disposition_type,OWNER,owner,titulaire,owner of the account (only the owner can issue permanent orders and ask for a loan),pkdd99_guide
+disposition_type,DISPONENT,user,mandataire,user of the account (the guide says owner/user),pkdd99_guide
+transaction_type,PRIJEM,credit,crédit,credit (money in),pkdd99_guide
+transaction_type,VYDAJ,debit,débit,withdrawal (money out),pkdd99_guide
+transaction_type,VYBER,debit,débit,"not in the guide; all its rows have operation VYBER (withdrawal in cash) and the balance goes down, so treated as a debit",project_check
+transaction_operation,VYBER KARTOU,card_withdrawal,retrait par carte,credit card withdrawal,pkdd99_guide
+transaction_operation,VKLAD,cash_credit,versement en espèces,credit in cash,pkdd99_guide
+transaction_operation,PREVOD Z UCTU,collection_from_other_bank,encaissement d'une autre banque,collection from another bank,pkdd99_guide
+transaction_operation,VYBER,cash_withdrawal,retrait en espèces,withdrawal in cash,pkdd99_guide
+transaction_operation,PREVOD NA UCET,remittance_to_other_bank,virement vers une autre banque,remittance to another bank,pkdd99_guide
+payment_type,POJISTNE,insurance_payment,paiement d'assurance,insurance payment,pkdd99_guide
+payment_type,SLUZBY,statement_fee,frais de relevé,payment for statement,pkdd99_guide
+payment_type,UROK,interest_credited,intérêts créditeurs,interest credited,pkdd99_guide
+payment_type,SANKC. UROK,penalty_interest,intérêts de pénalité,sanction interest if negative balance,pkdd99_guide
+payment_type,SIPO,household_payment,paiement du foyer,household payment,pkdd99_guide
+payment_type,DUCHOD,old_age_pension,pension de retraite,old-age pension,pkdd99_guide
+payment_type,UVER,loan_payment,remboursement de prêt,loan payment,pkdd99_guide
+payment_type,LEASING,leasing,leasing,leasing,pkdd99_guide
+loan_status,A,finished_ok,terminé sans problème,"contract finished, no problems",pkdd99_guide
+loan_status,B,finished_unpaid,terminé non remboursé,"contract finished, loan not paid",pkdd99_guide
+loan_status,C,running_ok,en cours sans problème,"running contract, OK so far",pkdd99_guide
+loan_status,D,running_in_debt,en cours avec retard,"running contract, client in debt",pkdd99_guide

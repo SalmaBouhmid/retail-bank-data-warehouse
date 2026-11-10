@@ -1,0 +1,47 @@
+version: 2
+
+seeds:
+  - name: czech_codes
+    description: >
+      Translation of the Czech codes of the Berka data. Source "pkdd99_guide" = the official
+      description of the PKDD'99 Discovery Challenge data (Petr Berka, Marta Sochorova),
+      archived at https://web.archive.org/web/20180506035658/http://lisp.vse.cz/pkdd99/Challenge/berka.htm.
+      Source "project_check" = not in the guide, deduced from the data (see the description).
+    config:
+      column_types:
+        domain: text
+        code: text
+        label: text
+        label_fr: text
+        description: text
+        source: text
+    columns:
+      - name: domain
+        description: Which code family (one per raw column that holds codes).
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: [account_frequency, disposition_type, transaction_type,
+                         transaction_operation, payment_type, loan_status]
+      - name: code
+        description: The code exactly as in the raw data.
+        data_tests:
+          - not_null
+      - name: label
+        description: Short English label used in the models.
+        data_tests:
+          - not_null
+      - name: label_fr
+        description: French label, for the reports.
+        data_tests:
+          - not_null
+      - name: source
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [pkdd99_guide, project_check]
+    data_tests:
+      - unique:
+          arguments:
+            column_name: "domain || ':' || code"

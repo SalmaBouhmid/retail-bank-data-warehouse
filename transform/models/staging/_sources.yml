@@ -1,0 +1,20 @@
+version: 2
+
+sources:
+  - name: raw
+    description: >
+      Copy of the public Berka database (PKDD'99, Czech bank, 1993-1998), loaded by
+      bank_dw.extract (MariaDB -> Parquet) then bank_dw.load (Parquet -> PostgreSQL).
+      Amounts are in Czech crowns (CZK).
+    schema: raw
+    tables:
+      - name: account
+      - name: card
+      - name: client
+      - name: disp
+      - name: district
+      - name: loan
+      - name: order
+        quoting:
+          identifier: true  # "order" is a SQL keyword
+      - name: trans

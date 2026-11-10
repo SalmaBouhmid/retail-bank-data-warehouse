@@ -17,3 +17,10 @@ venv/
 
 # Claude Code local settings
 .claude/
+
+# dbt
+transform/target/
+transform/dbt_packages/
+transform/logs/
+transform/.user.yml
+logs/

@@ -1,0 +1,14 @@
+# Connection to the docker compose PostgreSQL. Settings come from the .env file
+# (loaded by: python -m bank_dw.run_dbt ...), never written in Git.
+bank_dw:
+  target: dev
+  outputs:
+    dev:
+      type: postgres
+      host: "{{ env_var('WAREHOUSE_PG_HOST', 'localhost') }}"
+      port: "{{ env_var('WAREHOUSE_PG_PORT', '5434') | int }}"
+      user: "{{ env_var('WAREHOUSE_PG_USER') }}"
+      password: "{{ env_var('WAREHOUSE_PG_PASSWORD') }}"
+      dbname: "{{ env_var('WAREHOUSE_PG_DB') }}"
+      schema: public
+      threads: 4

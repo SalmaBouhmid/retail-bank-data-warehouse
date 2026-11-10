@@ -1,0 +1,21 @@
+name: bank_dw
+version: "0.1.0"
+config-version: 2
+profile: bank_dw
+
+model-paths: ["models"]
+seed-paths: ["seeds"]
+test-paths: ["tests"]
+macro-paths: ["macros"]
+target-path: target
+clean-targets: [target, dbt_packages]
+
+models:
+  bank_dw:
+    staging:
+      +schema: staging
+      +materialized: view   # staging = renamed and typed copy of raw: a view is enough
+
+seeds:
+  bank_dw:
+    +schema: reference
