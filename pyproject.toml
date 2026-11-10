@@ -3,14 +3,19 @@ name = "retail-bank-data-warehouse"
 version = "0.1.0"
 description = "Retail bank data warehouse built on the public Berka (PKDD'99) dataset"
 requires-python = ">=3.11"
-dependencies = ["sqlalchemy>=2.0", "pymysql>=1.1", "pyarrow>=15", "python-dotenv>=1.0"]
+dependencies = [
+  "sqlalchemy>=2.0", "pymysql>=1.1", "pyarrow>=15", "python-dotenv>=1.0", "psycopg2-binary>=2.9",
+]
 
 [project.optional-dependencies]
 dev = ["pytest>=8", "ruff>=0.5"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-markers = ["integration: checks the real files in data/raw (skipped if they are missing)"]
+markers = [
+  "integration: checks the real files in data/raw (skipped if they are missing)",
+  "postgres: needs the docker compose PostgreSQL (skipped if it is not running)",
+]
 
 [tool.ruff]
 line-length = 100

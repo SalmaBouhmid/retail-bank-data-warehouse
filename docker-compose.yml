@@ -1,0 +1,22 @@
+# Data warehouse database. Start it with:  docker compose up -d
+# Settings (user, password, port) come from the .env file (copy .env.example).
+services:
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: ${WAREHOUSE_PG_USER:?set WAREHOUSE_PG_USER in .env}
+      POSTGRES_PASSWORD: ${WAREHOUSE_PG_PASSWORD:?set WAREHOUSE_PG_PASSWORD in .env}
+      POSTGRES_DB: ${WAREHOUSE_PG_DB:?set WAREHOUSE_PG_DB in .env}
+    ports:
+      - "${WAREHOUSE_PG_PORT:-5434}:5432"  # 5434 on this PC: 5432 and 5433 are already used
+    volumes:
+      - pgdata:/var/lib/postgresql/data  # the data survives "docker compose down"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+volumes:
+  pgdata:

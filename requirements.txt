@@ -2,3 +2,4 @@ sqlalchemy>=2.0
 pymysql>=1.1
 pyarrow>=15
 python-dotenv>=1.0
+psycopg2-binary>=2.9
