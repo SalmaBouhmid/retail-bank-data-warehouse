@@ -24,3 +24,6 @@ transform/dbt_packages/
 transform/logs/
 transform/.user.yml
 logs/
+
+# Quality report (recreated by: python -m bank_dw.quality)
+reports/

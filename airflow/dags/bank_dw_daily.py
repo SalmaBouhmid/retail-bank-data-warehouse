@@ -1,7 +1,7 @@
 """Airflow DAG: the whole warehouse, every day.
 
-    extract  ->  load  ->  dbt_run  ->  dbt_test
-    (MariaDB -> Parquet)  (Parquet -> schema raw)  (seed + models)  (data tests)
+    extract  ->  load  ->  dbt_run  ->  dbt_test  ->  quality_report
+    (MariaDB -> Parquet)  (Parquet -> raw)  (seed + models)  (data tests)  (HTML report)
 
 - Runs every day at 05:00 UTC. The source does not change any more (data 1993-1998), but a
   daily run shows what a real pipeline does: history of runs, logs, retries, failures.
@@ -12,6 +12,8 @@
 - The parameter simulate_failure=true makes "load" fail on its first try only: it shows a
   retry in the logs without breaking anything.
 - dbt_test fails (in red) if one dbt test fails, e.g. a code without translation.
+- quality_report runs even when dbt_test failed (trigger rule "all_done"): that is when the
+  report is most useful. It writes reports/quality_report.html and fails if a check is "error".
 """
 
 from __future__ import annotations
@@ -94,7 +96,13 @@ def bank_dw_daily():
         bash_command=f"cd {PROJECT_DIR} && python -m bank_dw.run_dbt test",
     )
 
-    load(extract()) >> dbt_run >> dbt_test
+    quality_report = BashOperator(
+        task_id="quality_report",
+        bash_command=f"cd {PROJECT_DIR} && python -m bank_dw.quality",
+        trigger_rule="all_done",
+    )
+
+    load(extract()) >> dbt_run >> dbt_test >> quality_report
 
 
 bank_dw_daily()

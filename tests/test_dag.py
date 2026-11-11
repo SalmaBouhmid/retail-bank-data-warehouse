@@ -23,11 +23,16 @@ def dag():
     return bag.get_dag("bank_dw_daily")
 
 
-def test_dag_has_the_4_tasks_in_order(dag):
-    assert sorted(dag.task_ids) == ["dbt_run", "dbt_test", "extract", "load"]
+def test_dag_has_the_5_tasks_in_order(dag):
+    assert sorted(dag.task_ids) == ["dbt_run", "dbt_test", "extract", "load", "quality_report"]
     assert dag.get_task("extract").downstream_task_ids == {"load"}
     assert dag.get_task("load").downstream_task_ids == {"dbt_run"}
     assert dag.get_task("dbt_run").downstream_task_ids == {"dbt_test"}
+    assert dag.get_task("dbt_test").downstream_task_ids == {"quality_report"}
+
+
+def test_quality_report_runs_even_if_dbt_test_failed(dag):
+    assert dag.get_task("quality_report").trigger_rule == "all_done"
 
 
 def test_dag_retries_and_schedule(dag):
