@@ -1,6 +1,7 @@
 """Checks on the real schema "raw" in the docker compose PostgreSQL (after python -m bank_dw.load).
 
-Skipped when PostgreSQL is not running or the raw tables are not loaded yet.
+Skipped when PostgreSQL is not running, the raw tables are not loaded, or the full data was not
+extracted on this machine (the CI loads a small sample: these exact counts do not apply there).
 """
 
 from __future__ import annotations
@@ -9,7 +10,11 @@ import psycopg2
 import pytest
 
 from bank_dw import load
-from tests.test_raw_files import EXPECTED
+from tests.test_raw_files import EXPECTED, RAW_DIR
+
+pytestmark = pytest.mark.skipif(
+    not (RAW_DIR / "_manifest.json").exists(), reason="full data not extracted (CI sample)"
+)
 
 
 @pytest.fixture(scope="module")

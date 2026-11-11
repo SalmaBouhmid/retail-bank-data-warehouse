@@ -1,0 +1,62 @@
+# Continuous integration: on every push, rebuild the warehouse on a temporary PostgreSQL
+# from a small sample of the real data (tests/fixtures/berka_sample), then run every check.
+name: ci
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    services:
+      postgres:  # a fresh, empty database for each run
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: ci
+          POSTGRES_PASSWORD: ci-only-password
+          POSTGRES_DB: bank_dw
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U ci -d bank_dw"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      WAREHOUSE_PG_HOST: localhost
+      WAREHOUSE_PG_PORT: "5432"
+      WAREHOUSE_PG_USER: ci
+      WAREHOUSE_PG_PASSWORD: ci-only-password
+      WAREHOUSE_PG_DB: bank_dw
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt -r requirements-dbt.txt pytest ruff
+
+      - name: Ruff (style and errors)
+        run: |
+          ruff check .
+          ruff format --check .
+
+      - name: Load the sample into the schema raw
+        run: python -m bank_dw.load --raw-dir tests/fixtures/berka_sample
+
+      - name: dbt build (seed, models and all dbt tests)
+        run: python -m bank_dw.run_dbt build
+
+      - name: Quality report (fails on any "error" check)
+        run: python -m bank_dw.quality
+
+      - name: Pytest (unit tests + PostgreSQL tests)
+        run: pytest -q -rs
+
+      - name: Keep the quality report of this run
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: quality-report
+          path: reports/

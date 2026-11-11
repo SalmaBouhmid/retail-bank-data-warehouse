@@ -1,0 +1,118 @@
+{
+  "source": "https://relational.fel.cvut.cz/dataset/Financial",
+  "database": "financial (CI sample, see scripts/make_ci_sample.py)",
+  "extracted_at": "2026-11-10T16:10:53+00:00",
+  "tables": {
+    "account": {
+      "file": "account.parquet",
+      "rows": 126,
+      "columns": [
+        "account_id",
+        "district_id",
+        "frequency",
+        "date"
+      ],
+      "sha256": "088f76dedf27305ac3d85921920b591d56fda3cd536add7233d60f086491756c"
+    },
+    "disp": {
+      "file": "disp.parquet",
+      "rows": 149,
+      "columns": [
+        "disp_id",
+        "client_id",
+        "account_id",
+        "type"
+      ],
+      "sha256": "3116595688eaf49bc70898d1a6cbb33f8f8c2da07cd1707f81f7976a1c6b4e95"
+    },
+    "client": {
+      "file": "client.parquet",
+      "rows": 149,
+      "columns": [
+        "client_id",
+        "gender",
+        "birth_date",
+        "district_id"
+      ],
+      "sha256": "a4cde55016b8402992fce298af632a0878c040f3f03943fb37bca14365103dbc"
+    },
+    "card": {
+      "file": "card.parquet",
+      "rows": 30,
+      "columns": [
+        "card_id",
+        "disp_id",
+        "type",
+        "issued"
+      ],
+      "sha256": "bbea5fb51769ac74ab48601a64f1516ad49e620afd5ab2e76fda5b4cdffc148e"
+    },
+    "loan": {
+      "file": "loan.parquet",
+      "rows": 32,
+      "columns": [
+        "loan_id",
+        "account_id",
+        "date",
+        "amount",
+        "duration",
+        "payments",
+        "status"
+      ],
+      "sha256": "4593e9c9a5694d25b4f03d6c92797aff1ea3bede27a4a4737047a995813481ad"
+    },
+    "order": {
+      "file": "order.parquet",
+      "rows": 192,
+      "columns": [
+        "order_id",
+        "account_id",
+        "bank_to",
+        "account_to",
+        "amount",
+        "k_symbol"
+      ],
+      "sha256": "b4298e26aac1f3403b8784ca4c49e6ed1ef7a774d66da5e9490290a594fc05c0"
+    },
+    "trans": {
+      "file": "trans.parquet",
+      "rows": 29371,
+      "columns": [
+        "trans_id",
+        "account_id",
+        "date",
+        "type",
+        "operation",
+        "amount",
+        "balance",
+        "k_symbol",
+        "bank",
+        "account"
+      ],
+      "sha256": "fc0a6e1c8f6a070b33807f38753324525dbf8c7caa53914d7e39b11f12117e76"
+    },
+    "district": {
+      "file": "district.parquet",
+      "rows": 77,
+      "columns": [
+        "district_id",
+        "A2",
+        "A3",
+        "A4",
+        "A5",
+        "A6",
+        "A7",
+        "A8",
+        "A9",
+        "A10",
+        "A11",
+        "A12",
+        "A13",
+        "A14",
+        "A15",
+        "A16"
+      ],
+      "sha256": "464cfadf4eca56a4121f30efa530e49498855acd620a5cb7798ec21db83c88dd"
+    }
+  }
+}
