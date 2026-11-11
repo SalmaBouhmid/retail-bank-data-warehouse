@@ -1,0 +1,243 @@
+table fct_loans
+	lineageTag: 0bb9c1dc-9eb7-5157-b82e-580893debe6c
+
+	measure Prêts = COUNTROWS(fct_loans)
+		formatString: #,0
+		lineageTag: 14054404-7f4c-5bfb-9e55-7371d3d43d4d
+
+	measure 'Prêts en défaut' = CALCULATE(COUNTROWS(fct_loans), fct_loans[is_default] = TRUE())
+		formatString: #,0
+		lineageTag: 37755de9-b8f2-54cd-b281-e6a4e0c94efb
+
+	measure 'Taux de défaut' = DIVIDE([Prêts en défaut], [Prêts])
+		formatString: 0.0%
+		lineageTag: 513582c4-566c-5fe1-b3ea-8428a70918a8
+
+	measure 'Montant en défaut (CZK)' = SUM(fct_loans[amount_in_default])
+		formatString: #,0
+		lineageTag: ae35a1bc-83bb-5344-96e3-7734afa226b2
+
+	measure 'Solde minimum moyen avant prêt (CZK)' = AVERAGE(fct_loans[min_balance_before])
+		formatString: #,0
+		lineageTag: ee8dbe45-94c7-5b06-9756-b01422af1d3e
+
+	measure 'Solde moyen avant prêt (CZK)' = AVERAGE(fct_loans[avg_month_end_balance_before])
+		formatString: #,0
+		lineageTag: 9d392bf5-4bc0-5654-9b90-400d45885f67
+
+	measure 'Jours à découvert avant prêt (moyenne)' = AVERAGE(fct_loans[n_days_negative_balance_before])
+		formatString: 0.00
+		lineageTag: eabc8e10-662d-5aaa-9ee7-b05faaaed0d2
+
+	measure 'Pénalités avant prêt (moyenne)' = AVERAGE(fct_loans[n_penalty_interest_before])
+		formatString: 0.00
+		lineageTag: 657dce66-1c94-526c-8575-49ed24826489
+
+	column loan_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 7797df4e-2c66-5754-b178-cfe9c5a527b5
+		summarizeBy: none
+		sourceColumn: loan_id
+
+	column account_id
+		dataType: int64
+		formatString: 0
+		lineageTag: d4c92e8d-f16d-5082-bca4-04e0967ac201
+		summarizeBy: none
+		sourceColumn: account_id
+
+	column owner_client_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 482fcf2f-83f4-5b79-afb5-9d943916500e
+		summarizeBy: none
+		sourceColumn: owner_client_id
+
+	column district_id
+		dataType: int64
+		formatString: 0
+		lineageTag: be0c2eaf-cb37-5a59-b65c-bb4c33d4377f
+		summarizeBy: none
+		sourceColumn: district_id
+
+	column granted_on
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		lineageTag: bcdb4f45-8ead-5f1d-867d-b86d834730d8
+		summarizeBy: none
+		sourceColumn: granted_on
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column amount
+		dataType: int64
+		formatString: 0
+		lineageTag: a4f137d6-f8bb-5aed-88d8-bd1208df0e95
+		summarizeBy: sum
+		sourceColumn: amount
+
+	column amount_band
+		dataType: string
+		lineageTag: e2a45d03-a692-5a3b-b064-450476676f7e
+		summarizeBy: none
+		sourceColumn: amount_band
+		sortByColumn: amount_band_order
+
+	column amount_band_order
+		dataType: int64
+		formatString: 0
+		lineageTag: 22cbf416-b9b1-5559-a4c6-20e872238d39
+		summarizeBy: none
+		sourceColumn: amount_band_order
+
+	column duration_months
+		dataType: int64
+		formatString: 0
+		lineageTag: c44a66ee-681d-53b0-b950-df50a2a58f3c
+		summarizeBy: none
+		sourceColumn: duration_months
+
+	column monthly_payment
+		dataType: double
+		formatString: #,0.00
+		lineageTag: faaa8ff7-0c74-520a-a7e3-b413fcd177ad
+		summarizeBy: sum
+		sourceColumn: monthly_payment
+
+	column status_code
+		dataType: string
+		lineageTag: e6cc95d6-c369-5f05-91d4-de76fb4ff80e
+		summarizeBy: none
+		sourceColumn: status_code
+
+	column loan_status
+		dataType: string
+		lineageTag: 9c422691-839c-55be-9a67-54ca93c56805
+		summarizeBy: none
+		sourceColumn: loan_status
+
+	column is_default
+		dataType: boolean
+		lineageTag: c1e30fc9-38a8-567e-8a51-c56401cd97bb
+		summarizeBy: none
+		sourceColumn: is_default
+
+	column is_finished
+		dataType: boolean
+		lineageTag: 32d28e20-7fd6-504b-9b1c-c8b74294d007
+		summarizeBy: none
+		sourceColumn: is_finished
+
+	column amount_in_default
+		dataType: int64
+		formatString: 0
+		lineageTag: f3e362a3-abdc-5686-beb4-9e5c00154abb
+		summarizeBy: sum
+		sourceColumn: amount_in_default
+
+	column client_age_at_loan
+		dataType: int64
+		formatString: 0
+		lineageTag: d068cecc-0bc3-54bb-9cb4-d663309fde96
+		summarizeBy: sum
+		sourceColumn: client_age_at_loan
+
+	column had_card_before_loan
+		dataType: boolean
+		lineageTag: 7eecb420-ee17-5b03-a67e-f003d859cef9
+		summarizeBy: none
+		sourceColumn: had_card_before_loan
+
+	column n_transactions_before
+		dataType: int64
+		formatString: 0
+		lineageTag: ae26191c-caea-5d76-89aa-2f349b3f899a
+		summarizeBy: sum
+		sourceColumn: n_transactions_before
+
+	column days_of_history_before
+		dataType: int64
+		formatString: 0
+		lineageTag: edce1c48-c13a-5316-9a11-00cf077c0455
+		summarizeBy: sum
+		sourceColumn: days_of_history_before
+
+	column n_penalty_interest_before
+		dataType: int64
+		formatString: 0
+		lineageTag: 3765e418-21a3-5a33-bb39-ba6daead2431
+		summarizeBy: sum
+		sourceColumn: n_penalty_interest_before
+
+	column n_cash_withdrawals_before
+		dataType: int64
+		formatString: 0
+		lineageTag: cfa62867-76b1-5d48-a50f-e69add716388
+		summarizeBy: sum
+		sourceColumn: n_cash_withdrawals_before
+
+	column received_pension_before
+		dataType: boolean
+		lineageTag: dad5620e-d8db-5fe7-88dc-ad4414693ff4
+		summarizeBy: none
+		sourceColumn: received_pension_before
+
+	column min_balance_before
+		dataType: int64
+		formatString: 0
+		lineageTag: 794ca9a7-dda3-5c24-a77e-fd2003d555e8
+		summarizeBy: sum
+		sourceColumn: min_balance_before
+
+	column n_days_negative_balance_before
+		dataType: int64
+		formatString: 0
+		lineageTag: bb327320-a2f8-5fc6-9c1d-2773671291ed
+		summarizeBy: sum
+		sourceColumn: n_days_negative_balance_before
+
+	column balance_before_loan
+		dataType: int64
+		formatString: 0
+		lineageTag: ca9ec19a-fd8b-5c82-a1e2-bdd75ddc2078
+		summarizeBy: sum
+		sourceColumn: balance_before_loan
+
+	column n_full_months_before
+		dataType: int64
+		formatString: 0
+		lineageTag: 31d5a189-4f4e-5bb8-a9fc-3bfaa0f4724d
+		summarizeBy: sum
+		sourceColumn: n_full_months_before
+
+	column avg_month_end_balance_before
+		dataType: double
+		formatString: #,0.00
+		lineageTag: e7dc6db6-adb3-56b7-9e75-862612463705
+		summarizeBy: sum
+		sourceColumn: avg_month_end_balance_before
+
+	column avg_monthly_credits_before
+		dataType: double
+		formatString: #,0.00
+		lineageTag: eb41064a-e93d-513b-8b6d-24416b2f6b5b
+		summarizeBy: sum
+		sourceColumn: avg_monthly_credits_before
+
+	column avg_monthly_debits_before
+		dataType: double
+		formatString: #,0.00
+		lineageTag: a4f4bb35-7c89-5081-98d5-2a1b4054e1d9
+		summarizeBy: sum
+		sourceColumn: avg_monthly_debits_before
+
+	partition fct_loans = m
+		mode: import
+		source =
+				let
+				    Source = PostgreSQL.Database(Server, Database),
+				    Data = Source{[Schema="marts", Item="fct_loans"]}[Data]
+				in
+				    Data
+

@@ -1,0 +1,128 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
+  "name": "rk_before",
+  "position": {
+    "x": 20,
+    "y": 430,
+    "z": 0,
+    "width": 985,
+    "height": 270
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fct_loans"
+                    }
+                  },
+                  "Property": "loan_status"
+                }
+              },
+              "queryRef": "fct_loans.loan_status",
+              "nativeQueryRef": "loan_status"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fct_loans"
+                    }
+                  },
+                  "Property": "Prêts"
+                }
+              },
+              "queryRef": "fct_loans.Prêts",
+              "nativeQueryRef": "Prêts"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fct_loans"
+                    }
+                  },
+                  "Property": "Solde moyen avant prêt (CZK)"
+                }
+              },
+              "queryRef": "fct_loans.Solde moyen avant prêt (CZK)",
+              "nativeQueryRef": "Solde moyen avant prêt (CZK)"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fct_loans"
+                    }
+                  },
+                  "Property": "Solde minimum moyen avant prêt (CZK)"
+                }
+              },
+              "queryRef": "fct_loans.Solde minimum moyen avant prêt (CZK)",
+              "nativeQueryRef": "Solde minimum moyen avant prêt (CZK)"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fct_loans"
+                    }
+                  },
+                  "Property": "Jours à découvert avant prêt (moyenne)"
+                }
+              },
+              "queryRef": "fct_loans.Jours à découvert avant prêt (moyenne)",
+              "nativeQueryRef": "Jours à découvert avant prêt (moyenne)"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fct_loans"
+                    }
+                  },
+                  "Property": "Pénalités avant prêt (moyenne)"
+                }
+              },
+              "queryRef": "fct_loans.Pénalités avant prêt (moyenne)",
+              "nativeQueryRef": "Pénalités avant prêt (moyenne)"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Indicateurs connus AVANT le prêt, par statut (sans fuite de données)'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

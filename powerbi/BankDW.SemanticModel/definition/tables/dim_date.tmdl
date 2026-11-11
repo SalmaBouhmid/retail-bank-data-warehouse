@@ -1,0 +1,84 @@
+table dim_date
+	lineageTag: 64be17e2-eb48-5ad8-a47e-dd4fe97c818f
+	dataCategory: Time
+
+	column date_day
+		dataType: dateTime
+		isKey
+		formatString: yyyy-mm-dd
+		lineageTag: 82a3ec3a-6eaf-51a1-b955-b30e91f6cf1a
+		summarizeBy: none
+		sourceColumn: date_day
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column year
+		dataType: int64
+		formatString: 0
+		lineageTag: fd1b8703-ae05-5bee-984d-a5ec2f62c8d6
+		summarizeBy: none
+		sourceColumn: year
+
+	column quarter
+		dataType: int64
+		formatString: 0
+		lineageTag: 515299b6-05fa-5ec2-87a1-925e4936ef37
+		summarizeBy: none
+		sourceColumn: quarter
+
+	column month
+		dataType: int64
+		formatString: 0
+		lineageTag: 46e2ded5-a784-596f-9fc9-672623baa876
+		summarizeBy: none
+		sourceColumn: month
+
+	column month_name
+		dataType: string
+		lineageTag: 88ff7ade-07aa-59e7-9434-41e7b8130257
+		summarizeBy: none
+		sourceColumn: month_name
+
+	column year_month
+		dataType: string
+		lineageTag: 7ec79504-fb3a-5761-84c3-365e2d550d2b
+		summarizeBy: none
+		sourceColumn: year_month
+
+	column month_start
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		lineageTag: 534538f5-9e88-589e-b285-a30acafcc59c
+		summarizeBy: none
+		sourceColumn: month_start
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column day_of_week
+		dataType: int64
+		formatString: 0
+		lineageTag: 78bec1e4-693f-53e1-90c1-09b79aabe5d6
+		summarizeBy: none
+		sourceColumn: day_of_week
+
+	column day_name
+		dataType: string
+		lineageTag: 0cbe9075-e752-57fc-83a2-85d835411fb4
+		summarizeBy: none
+		sourceColumn: day_name
+
+	column is_weekend
+		dataType: boolean
+		lineageTag: 857d9af3-40d8-5eac-a33d-1e3a905af624
+		summarizeBy: none
+		sourceColumn: is_weekend
+
+	partition dim_date = m
+		mode: import
+		source =
+				let
+				    Source = PostgreSQL.Database(Server, Database),
+				    Data = Source{[Schema="marts", Item="dim_date"]}[Data]
+				in
+				    Data
+

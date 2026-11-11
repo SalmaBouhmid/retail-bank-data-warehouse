@@ -37,7 +37,7 @@ select
     clients.birth_date,
     clients.age_at_reference_date,
     case
-        when clients.age_at_reference_date < 18 then 'under 18'
+        when clients.age_at_reference_date < 18 then '0-17'
         when clients.age_at_reference_date < 25 then '18-24'
         when clients.age_at_reference_date < 35 then '25-34'
         when clients.age_at_reference_date < 45 then '35-44'

@@ -1,0 +1,91 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
+  "name": "ov_volumes",
+  "position": {
+    "x": 20,
+    "y": 150,
+    "z": 0,
+    "height": 550,
+    "width": 820
+  },
+  "visual": {
+    "visualType": "lineChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_date"
+                    }
+                  },
+                  "Property": "month_start"
+                }
+              },
+              "queryRef": "dim_date.month_start",
+              "nativeQueryRef": "month_start",
+              "active": true
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fct_transactions"
+                    }
+                  },
+                  "Property": "Volume crédits (CZK)"
+                }
+              },
+              "queryRef": "fct_transactions.Volume crédits (CZK)",
+              "nativeQueryRef": "Volume crédits (CZK)"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fct_transactions"
+                    }
+                  },
+                  "Property": "Volume débits (CZK)"
+                }
+              },
+              "queryRef": "fct_transactions.Volume débits (CZK)",
+              "nativeQueryRef": "Volume débits (CZK)"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Volume mensuel des transactions (CZK)'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

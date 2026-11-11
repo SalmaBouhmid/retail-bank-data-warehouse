@@ -1,0 +1,58 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
+  "name": "rk_card2",
+  "position": {
+    "x": 520,
+    "y": 20,
+    "z": 0,
+    "width": 235,
+    "height": 100
+  },
+  "visual": {
+    "visualType": "card",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fct_loans"
+                    }
+                  },
+                  "Property": "Taux de défaut"
+                }
+              },
+              "queryRef": "fct_loans.Taux de défaut",
+              "nativeQueryRef": "Taux de défaut"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Taux de défaut'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

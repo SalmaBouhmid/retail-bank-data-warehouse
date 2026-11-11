@@ -1,0 +1,96 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
+  "name": "ov_quality",
+  "position": {
+    "x": 860,
+    "y": 150,
+    "z": 0,
+    "height": 550,
+    "width": 400
+  },
+  "visual": {
+    "visualType": "pivotTable",
+    "query": {
+      "queryState": {
+        "Columns": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "check_results"
+                    }
+                  },
+                  "Property": "status"
+                }
+              },
+              "queryRef": "check_results.status",
+              "nativeQueryRef": "status",
+              "active": true
+            }
+          ]
+        },
+        "Rows": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "check_results"
+                    }
+                  },
+                  "Property": "family"
+                }
+              },
+              "queryRef": "check_results.family",
+              "nativeQueryRef": "family",
+              "active": true
+            }
+          ]
+        },
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "check_results"
+                    }
+                  },
+                  "Property": "Contrôles"
+                }
+              },
+              "queryRef": "check_results.Contrôles",
+              "nativeQueryRef": "Contrôles"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Rapport qualité : contrôles par statut'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

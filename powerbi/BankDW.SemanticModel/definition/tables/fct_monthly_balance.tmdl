@@ -1,0 +1,94 @@
+table fct_monthly_balance
+	lineageTag: 54a48b07-d2f6-5ec6-8648-7d8da6d7b5db
+
+	measure 'Solde moyen fin de mois (CZK)' = AVERAGE(fct_monthly_balance[month_end_balance])
+		formatString: #,0
+		lineageTag: 4ee464c8-d02b-5a4a-9731-345763a9ba15
+
+	column account_id
+		dataType: int64
+		formatString: 0
+		lineageTag: d6100ca9-ef99-5971-9492-6a5ea307cc48
+		summarizeBy: none
+		sourceColumn: account_id
+
+	column owner_client_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 1816dd29-a93a-54de-bf63-ae1e7a3a8f7b
+		summarizeBy: none
+		sourceColumn: owner_client_id
+
+	column district_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 45ac12c6-bfbe-5240-87d7-2ba0df6fe743
+		summarizeBy: none
+		sourceColumn: district_id
+
+	column month_start
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		lineageTag: 3f964547-2c86-5507-b8d0-776935584a08
+		summarizeBy: none
+		sourceColumn: month_start
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column n_transactions
+		dataType: double
+		formatString: #,0.00
+		lineageTag: 54649601-4cb8-51ff-ae9c-07febc50114d
+		summarizeBy: sum
+		sourceColumn: n_transactions
+
+	column credits
+		dataType: double
+		formatString: #,0.00
+		lineageTag: 350425c3-3152-53b9-885d-8f78c4e97a02
+		summarizeBy: sum
+		sourceColumn: credits
+
+	column debits
+		dataType: double
+		formatString: #,0.00
+		lineageTag: c440836c-690f-5860-835c-ebcf917ee15e
+		summarizeBy: sum
+		sourceColumn: debits
+
+	column net_movement
+		dataType: double
+		formatString: #,0.00
+		lineageTag: 199a2fde-9b9e-5b5d-96b4-361c45a93b29
+		summarizeBy: sum
+		sourceColumn: net_movement
+
+	column month_end_balance
+		dataType: int64
+		formatString: 0
+		lineageTag: 91b3c9a5-6a13-56fc-9a1f-4b11e019635d
+		summarizeBy: sum
+		sourceColumn: month_end_balance
+
+	column min_balance
+		dataType: int64
+		formatString: 0
+		lineageTag: e7160811-cbad-5c11-91d2-af5c2a7b07b0
+		summarizeBy: sum
+		sourceColumn: min_balance
+
+	column had_negative_balance
+		dataType: boolean
+		lineageTag: 31b6ad60-1a30-5233-b985-3f0bebfb5441
+		summarizeBy: none
+		sourceColumn: had_negative_balance
+
+	partition fct_monthly_balance = m
+		mode: import
+		source =
+				let
+				    Source = PostgreSQL.Database(Server, Database),
+				    Data = Source{[Schema="marts", Item="fct_monthly_balance"]}[Data]
+				in
+				    Data
+

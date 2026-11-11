@@ -1,0 +1,28 @@
+model Model
+	culture: fr-FR
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: fr-FR
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation PBI_QueryOrder = ["dim_date","dim_client","dim_account","dim_district","fct_transactions","fct_monthly_balance","fct_loans","fct_cards","check_results","Server","Database"]
+
+annotation __PBI_TimeIntelligenceEnabled = 1
+
+annotation PBI_ProTooling = ["DevMode"]
+
+ref table dim_date
+ref table dim_client
+ref table dim_account
+ref table dim_district
+ref table fct_transactions
+ref table fct_monthly_balance
+ref table fct_loans
+ref table fct_cards
+ref table check_results
+ref table DateTableTemplate_a5f08532-1880-41d1-aeb9-d8075d539da1
+ref table LocalDateTable_24bc6c5b-c98c-4eee-ab1f-f51d58490f3a
+ref table LocalDateTable_4c009cd9-a8f6-4ad2-bcbf-56c117a207cd
+ref table LocalDateTable_917eba03-bd27-46c4-a626-d0e4b46401c9
+

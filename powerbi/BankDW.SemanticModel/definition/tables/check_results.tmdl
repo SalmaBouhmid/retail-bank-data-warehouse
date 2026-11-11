@@ -1,0 +1,70 @@
+table check_results
+	lineageTag: 86803f39-029c-5825-a2fd-a9a588aa68e7
+
+	measure Contrôles = COUNTROWS(check_results)
+		formatString: #,0
+		lineageTag: f2231b7c-256b-523e-bc62-54c84bc1123f
+
+	measure 'Contrôles à surveiller' = CALCULATE(COUNTROWS(check_results), check_results[status] IN {"warning", "error"})
+		formatString: #,0
+		lineageTag: 15463e4a-90ff-5e9c-89ce-38dc2ea7d593
+
+	column family
+		dataType: string
+		lineageTag: cc0c4a7d-dcbf-5a1d-a1f4-df7a662dbf16
+		summarizeBy: none
+		sourceColumn: family
+
+	column check_name
+		dataType: string
+		lineageTag: b493d10d-2342-5283-af7f-57821ecf83b3
+		summarizeBy: none
+		sourceColumn: check_name
+
+	column description
+		dataType: string
+		lineageTag: 35797f72-2a2c-5083-a3b5-37ed6ad12099
+		summarizeBy: none
+		sourceColumn: description
+
+	column rows_checked
+		dataType: int64
+		formatString: 0
+		lineageTag: 045b5fa8-3cad-5110-917d-446774c0f7fa
+		summarizeBy: sum
+		sourceColumn: rows_checked
+
+	column problems
+		dataType: int64
+		formatString: 0
+		lineageTag: f6c43653-cc27-5f6d-b124-80581ecdcd60
+		summarizeBy: sum
+		sourceColumn: problems
+
+	column status
+		dataType: string
+		lineageTag: 712cadda-f707-57db-9853-2a913546deeb
+		summarizeBy: none
+		sourceColumn: status
+
+	column checked_at
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		lineageTag: 84780cd9-bc76-5995-a677-f374e4f182f6
+		summarizeBy: none
+		sourceColumn: checked_at
+
+		variation Variation
+			isDefault
+			relationship: 93e131b5-9055-4221-9d24-af73625dd2c2
+			defaultHierarchy: LocalDateTable_917eba03-bd27-46c4-a626-d0e4b46401c9.'Hiérarchie de dates'
+
+	partition check_results = m
+		mode: import
+		source =
+				let
+				    Source = PostgreSQL.Database(Server, Database),
+				    Data = Source{[Schema="quality", Item="check_results"]}[Data]
+				in
+				    Data
+

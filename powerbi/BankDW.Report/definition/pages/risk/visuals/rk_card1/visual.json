@@ -1,0 +1,58 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
+  "name": "rk_card1",
+  "position": {
+    "x": 270,
+    "y": 20,
+    "z": 0,
+    "width": 235,
+    "height": 100
+  },
+  "visual": {
+    "visualType": "card",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fct_loans"
+                    }
+                  },
+                  "Property": "Prêts en défaut"
+                }
+              },
+              "queryRef": "fct_loans.Prêts en défaut",
+              "nativeQueryRef": "Prêts en défaut"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Prêts en défaut'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

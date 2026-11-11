@@ -1,0 +1,139 @@
+{
+  "version": "1.1.0",
+  "diagrams": [
+    {
+      "ordinal": 0,
+      "scrollPosition": {
+        "x": 0,
+        "y": 0
+      },
+      "nodes": [
+        {
+          "location": {
+            "x": 966.48846068184412,
+            "y": 507.047166256722
+          },
+          "nodeIndex": "check_results",
+          "nodeLineageTag": "86803f39-029c-5825-a2fd-a9a588aa68e7",
+          "size": {
+            "height": 296,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 50,
+            "y": 252.9271245457337
+          },
+          "nodeIndex": "dim_account",
+          "nodeLineageTag": "ad1c7589-c22f-5cc6-918d-4c337219899f",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 336.5456112516751,
+            "y": 251.22687142629661
+          },
+          "nodeIndex": "dim_client",
+          "nodeLineageTag": "9e8dac68-409d-5b2d-bfbe-c9bafab1a3db",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 622.91377653473137,
+            "y": 251.24296488927507
+          },
+          "nodeIndex": "dim_date",
+          "nodeLineageTag": "64be17e2-eb48-5ad8-a47e-dd4fe97c818f",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 500.08451477560226,
+            "y": 960.09433251344421
+          },
+          "nodeIndex": "dim_district",
+          "nodeLineageTag": "976e38ee-69bf-5548-b98e-1fbac00913e3",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 262.89004140834345,
+            "y": -50
+          },
+          "nodeIndex": "fct_cards",
+          "nodeLineageTag": "5a487ac3-ac03-59c2-bc01-cfe529da478b",
+          "size": {
+            "height": 248,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 160.18461439355059,
+            "y": 606.41369420876185
+          },
+          "nodeIndex": "fct_loans",
+          "nodeLineageTag": "0bb9c1dc-9eb7-5157-b82e-580893debe6c",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 445.93899940034675,
+            "y": 606.41708286876383
+          },
+          "nodeIndex": "fct_monthly_balance",
+          "nodeLineageTag": "54a48b07-d2f6-5ec6-8648-7d8da6d7b5db",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 732.48846068184412,
+            "y": 606.40513931535679
+          },
+          "nodeIndex": "fct_transactions",
+          "nodeLineageTag": "5e112288-314a-5a58-baee-d873a7f0aed7",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        }
+      ],
+      "name": "All tables",
+      "zoomValue": 100,
+      "pinKeyFieldsToTop": false,
+      "showExtraHeaderInfo": false,
+      "hideKeyFieldsWhenCollapsed": false,
+      "tablesLocked": false
+    }
+  ],
+  "selectedDiagram": "All tables",
+  "defaultDiagram": "All tables"
+}

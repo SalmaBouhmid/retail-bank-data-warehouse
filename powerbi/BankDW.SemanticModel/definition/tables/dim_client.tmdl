@@ -1,0 +1,104 @@
+table dim_client
+	lineageTag: 9e8dac68-409d-5b2d-bfbe-c9bafab1a3db
+
+	measure Clients = COUNTROWS(dim_client)
+		formatString: #,0
+		lineageTag: acba5ed9-1112-503d-975b-3e12a186168d
+
+	column client_id
+		dataType: int64
+		isKey
+		formatString: 0
+		lineageTag: c9f0b3a9-4a85-54b0-addd-fe67426d6cc6
+		summarizeBy: none
+		sourceColumn: client_id
+
+	column gender
+		dataType: string
+		lineageTag: 01b74884-3534-5fbe-911d-c59b7d038880
+		summarizeBy: none
+		sourceColumn: gender
+
+	column birth_date
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		lineageTag: 41e7d12f-dfa5-5caf-8489-defd551dc379
+		summarizeBy: none
+		sourceColumn: birth_date
+
+		variation Variation
+			isDefault
+			relationship: 8bae0b93-35bd-4065-a4a5-07e907c63fb9
+			defaultHierarchy: LocalDateTable_24bc6c5b-c98c-4eee-ab1f-f51d58490f3a.'Hiérarchie de dates'
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column age_at_reference_date
+		dataType: int64
+		formatString: 0
+		lineageTag: 7ba480a4-da61-5f0f-96ce-8f03ae0865d0
+		summarizeBy: sum
+		sourceColumn: age_at_reference_date
+
+	column age_band
+		dataType: string
+		lineageTag: 1444d4c7-6059-5bbd-b5ca-24d7287c51ce
+		summarizeBy: none
+		sourceColumn: age_band
+
+	column district_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 595a9512-2bc1-541f-80e2-6fb9e36ce740
+		summarizeBy: sum
+		sourceColumn: district_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column district_name
+		dataType: string
+		lineageTag: 157d1475-eb14-55c6-a237-8f74a6180dff
+		summarizeBy: none
+		sourceColumn: district_name
+
+	column region
+		dataType: string
+		lineageTag: 96f8b779-74f9-517d-a085-ea29c1d4082c
+		summarizeBy: none
+		sourceColumn: region
+
+	column n_accounts_owned
+		dataType: int64
+		formatString: 0
+		lineageTag: d2c4e031-6964-563f-8d4f-a6a64b5057f9
+		summarizeBy: sum
+		sourceColumn: n_accounts_owned
+
+	column n_cards
+		dataType: int64
+		formatString: 0
+		lineageTag: 9fa6da00-8562-504a-ad9f-3fec5a2ab4ae
+		summarizeBy: sum
+		sourceColumn: n_cards
+
+	column best_card_type
+		dataType: string
+		lineageTag: 968dc77a-4f3c-5640-bb6e-2be5255dff13
+		summarizeBy: none
+		sourceColumn: best_card_type
+
+	column has_loan
+		dataType: boolean
+		lineageTag: 03351715-d315-5e3e-9ea1-2175a7002503
+		summarizeBy: none
+		sourceColumn: has_loan
+
+	partition dim_client = m
+		mode: import
+		source =
+				let
+				    Source = PostgreSQL.Database(Server, Database),
+				    Data = Source{[Schema="marts", Item="dim_client"]}[Data]
+				in
+				    Data
+

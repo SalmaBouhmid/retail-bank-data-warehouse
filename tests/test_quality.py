@@ -144,3 +144,14 @@ def test_checks_find_the_planted_problems(pg_raw):
     assert results["loans_before_account_opening"].status == "error"
     assert results["balance_chain_breaks"].checked is None  # skipped: no dbt tables
     assert quality.overall_status(list(results.values())) == "error"
+
+
+@pytest.mark.postgres
+def test_save_results_replaces_the_table(pg_raw):
+    conn, schema = pg_raw
+    results = [_result("ok", problems=0), _result("warning")]
+    quality.save_results(conn, results, schema=schema)
+    quality.save_results(conn, results, schema=schema)  # replaced, not appended
+    with conn.cursor() as cur:
+        cur.execute(f'select status, count(*) from "{schema}".check_results group by 1 order by 1')
+        assert cur.fetchall() == [("ok", 1), ("warning", 1)]

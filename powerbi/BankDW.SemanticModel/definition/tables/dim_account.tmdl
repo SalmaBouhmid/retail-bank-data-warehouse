@@ -1,0 +1,113 @@
+table dim_account
+	lineageTag: ad1c7589-c22f-5cc6-918d-4c337219899f
+
+	measure Comptes = COUNTROWS(dim_account)
+		formatString: #,0
+		lineageTag: ece63ff7-233c-51b2-977a-712abc195095
+
+	column account_id
+		dataType: int64
+		isKey
+		formatString: 0
+		lineageTag: bb648a6a-bf81-5328-a9bb-eb61a7fe8352
+		summarizeBy: none
+		sourceColumn: account_id
+
+	column owner_client_id
+		dataType: int64
+		formatString: 0
+		lineageTag: c42a411e-202e-5601-9f0f-14c4f5c7f778
+		summarizeBy: sum
+		sourceColumn: owner_client_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column district_id
+		dataType: int64
+		formatString: 0
+		lineageTag: f4bcf874-c514-5935-8446-71ac808f186c
+		summarizeBy: sum
+		sourceColumn: district_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column district_name
+		dataType: string
+		lineageTag: f8674a22-599d-55ee-8347-de24e4df67a5
+		summarizeBy: none
+		sourceColumn: district_name
+
+	column region
+		dataType: string
+		lineageTag: aadf2f74-fe08-549e-89cd-b063af831480
+		summarizeBy: none
+		sourceColumn: region
+
+	column opened_on
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		lineageTag: 3a575ee1-96a9-5f4b-aa5f-e70abcce2978
+		summarizeBy: none
+		sourceColumn: opened_on
+
+		variation Variation
+			isDefault
+			relationship: 36269872-eb85-4a77-ba9f-e395c3aaeeb2
+			defaultHierarchy: LocalDateTable_4c009cd9-a8f6-4ad2-bcbf-56c117a207cd.'Hiérarchie de dates'
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column seniority_years
+		dataType: int64
+		formatString: 0
+		lineageTag: dd1ad7e4-1403-55ef-a96b-f68de9271f2c
+		summarizeBy: sum
+		sourceColumn: seniority_years
+
+	column statement_frequency
+		dataType: string
+		lineageTag: fe664216-e4c3-5866-9548-25fc4d3dfc7e
+		summarizeBy: none
+		sourceColumn: statement_frequency
+
+	column n_clients
+		dataType: int64
+		formatString: 0
+		lineageTag: 280105f2-18d4-569a-a1cc-d11ba85cec0a
+		summarizeBy: sum
+		sourceColumn: n_clients
+
+	column has_secondary_user
+		dataType: boolean
+		lineageTag: 3113f486-8d0f-57a6-a2e5-a429502ea5fd
+		summarizeBy: none
+		sourceColumn: has_secondary_user
+
+	column n_cards
+		dataType: int64
+		formatString: 0
+		lineageTag: 40267259-bf68-5c99-8540-4d5b45f3e851
+		summarizeBy: sum
+		sourceColumn: n_cards
+
+	column best_card_type
+		dataType: string
+		lineageTag: 1c43b4b2-d141-53f5-8513-13df50437c15
+		summarizeBy: none
+		sourceColumn: best_card_type
+
+	column has_loan
+		dataType: boolean
+		lineageTag: 8b637f5e-df66-5c44-8f57-e02f82b7f522
+		summarizeBy: none
+		sourceColumn: has_loan
+
+	partition dim_account = m
+		mode: import
+		source =
+				let
+				    Source = PostgreSQL.Database(Server, Database),
+				    Data = Source{[Schema="marts", Item="dim_account"]}[Data]
+				in
+				    Data
+

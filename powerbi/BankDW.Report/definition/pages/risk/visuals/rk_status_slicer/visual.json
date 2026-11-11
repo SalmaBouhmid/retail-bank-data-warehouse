@@ -1,0 +1,59 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
+  "name": "rk_status_slicer",
+  "position": {
+    "x": 1020,
+    "y": 20,
+    "z": 0,
+    "height": 200,
+    "width": 240
+  },
+  "visual": {
+    "visualType": "slicer",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fct_loans"
+                    }
+                  },
+                  "Property": "loan_status"
+                }
+              },
+              "queryRef": "fct_loans.loan_status",
+              "nativeQueryRef": "loan_status",
+              "active": true
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Statut du prêt'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

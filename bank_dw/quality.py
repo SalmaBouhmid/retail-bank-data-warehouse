@@ -440,6 +440,29 @@ def write_report(results: list[CheckResult], output_dir: Path, load_info: str) -
     return html_path
 
 
+def save_results(conn, results: list[CheckResult], schema: str = "quality") -> None:
+    """Replace <schema>.check_results by the latest results (read by the Power BI report)."""
+    table = sql.SQL("{}.check_results").format(sql.Identifier(schema))
+    with conn, conn.cursor() as cur:
+        cur.execute(sql.SQL("create schema if not exists {}").format(sql.Identifier(schema)))
+        cur.execute(
+            sql.SQL(
+                "create table if not exists {} (family text not null, check_name text not null,"
+                " description text, rows_checked bigint, problems bigint, status text not null,"
+                " checked_at timestamptz not null default now())"
+            ).format(table)
+        )
+        cur.execute(sql.SQL("truncate table {}").format(table))
+        for r in results:
+            cur.execute(
+                sql.SQL(
+                    "insert into {} (family, check_name, description, rows_checked, problems,"
+                    " status) values (%s, %s, %s, %s, %s, %s)"
+                ).format(table),
+                (r.family, r.name, r.description, r.checked, r.problems, r.status),
+            )
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Write the data quality report.")
     parser.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT_DIR)
@@ -448,6 +471,7 @@ def main(argv: list[str] | None = None) -> int:
     try:
         results = run_checks(conn)
         load_info = last_load_info(conn)
+        save_results(conn, results)
     finally:
         conn.close()
     path = write_report(results, args.output_dir, load_info)

@@ -1,0 +1,60 @@
+table fct_cards
+	lineageTag: 5a487ac3-ac03-59c2-bc01-cfe529da478b
+
+	measure Cartes = COUNTROWS(fct_cards)
+		formatString: #,0
+		lineageTag: 3326abd3-3c71-53e5-b238-409efd3dc598
+
+	column card_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 065e6ce1-2fcc-5894-90d5-d1d8e10bd1d5
+		summarizeBy: none
+		sourceColumn: card_id
+
+	column card_type
+		dataType: string
+		lineageTag: de3c9a9f-860b-500c-a251-e9507e6ca3a1
+		summarizeBy: none
+		sourceColumn: card_type
+
+	column issued_on
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		lineageTag: b1e3e7a0-fba8-5f2c-ad99-246aa07e5266
+		summarizeBy: none
+		sourceColumn: issued_on
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column client_id
+		dataType: int64
+		formatString: 0
+		lineageTag: ac365a74-ac00-5629-90b4-f48cdd6db95d
+		summarizeBy: none
+		sourceColumn: client_id
+
+	column account_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 32b70fc6-d074-5ebe-a419-a4617a99d2b5
+		summarizeBy: none
+		sourceColumn: account_id
+
+	column holder_role
+		dataType: string
+		lineageTag: 7323a7a3-ed05-5bba-b61c-45963199ea8b
+		summarizeBy: none
+		sourceColumn: holder_role
+
+	partition fct_cards = m
+		mode: import
+		source =
+				let
+				    Source = PostgreSQL.Database(Server, Database),
+				    Data = Source{[Schema="marts", Item="fct_cards"]}[Data]
+				in
+				    Data
+
+	annotation PBI_ResultType = Table
+

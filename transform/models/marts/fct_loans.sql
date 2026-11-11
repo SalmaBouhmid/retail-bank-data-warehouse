@@ -6,6 +6,21 @@ select
     accounts.district_id,
     loans.granted_on,
     loans.amount,
+    -- amount bands for the report (the order column lets Power BI sort them correctly)
+    case
+        when loans.amount < 50000 then '< 50k'
+        when loans.amount < 100000 then '50k-100k'
+        when loans.amount < 200000 then '100k-200k'
+        when loans.amount < 300000 then '200k-300k'
+        else '300k+'
+    end as amount_band,
+    case
+        when loans.amount < 50000 then 1
+        when loans.amount < 100000 then 2
+        when loans.amount < 200000 then 3
+        when loans.amount < 300000 then 4
+        else 5
+    end as amount_band_order,
     loans.duration_months,
     loans.monthly_payment,
     loans.status_code,

@@ -27,3 +27,8 @@ logs/
 
 # Quality report (recreated by: python -m bank_dw.quality)
 reports/
+
+# Power BI Desktop local files (cache of the imported data, local settings)
+powerbi/**/.pbi/localSettings.json
+powerbi/**/.pbi/cache.abf
+*.pbix.bak

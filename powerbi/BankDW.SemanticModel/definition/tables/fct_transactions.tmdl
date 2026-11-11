@@ -1,0 +1,106 @@
+table fct_transactions
+	lineageTag: 5e112288-314a-5a58-baee-d873a7f0aed7
+
+	measure Transactions = COUNTROWS(fct_transactions)
+		formatString: #,0
+		lineageTag: 69a87940-c7fa-53d4-be2e-39a4f21a9ca6
+
+	measure 'Volume crédits (CZK)' = CALCULATE(SUM(fct_transactions[amount]), fct_transactions[direction] = "credit")
+		formatString: #,0
+		lineageTag: 8b7db9bd-dbc6-52da-9765-35ffdfd6e43f
+
+	measure 'Volume débits (CZK)' = CALCULATE(SUM(fct_transactions[amount]), fct_transactions[direction] = "debit")
+		formatString: #,0
+		lineageTag: d1fe61cb-ebbe-58e9-8d0e-edbe13a7d77b
+
+	column transaction_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 3c19c352-b48a-5092-988c-212894295fd2
+		summarizeBy: none
+		sourceColumn: transaction_id
+
+	column account_id
+		dataType: int64
+		formatString: 0
+		lineageTag: c0fd6063-31a1-5d5e-8f0c-f4a34b88d281
+		summarizeBy: none
+		sourceColumn: account_id
+
+	column owner_client_id
+		dataType: int64
+		formatString: 0
+		lineageTag: c410fb9e-7691-50ee-b9f0-45194c53fe49
+		summarizeBy: none
+		sourceColumn: owner_client_id
+
+	column district_id
+		dataType: int64
+		formatString: 0
+		lineageTag: dd5e6ec6-089c-530d-b7d4-bb3b799d25f2
+		summarizeBy: none
+		sourceColumn: district_id
+
+	column transaction_date
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		lineageTag: 857352b6-ce36-5de6-8866-282dace41734
+		summarizeBy: none
+		sourceColumn: transaction_date
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column direction
+		dataType: string
+		lineageTag: eef8323a-ab47-5272-9527-cc3011b55e9a
+		summarizeBy: none
+		sourceColumn: direction
+
+	column operation
+		dataType: string
+		lineageTag: 6fc981bc-bd40-5231-98ca-b14b734ce3a0
+		summarizeBy: none
+		sourceColumn: operation
+
+	column payment_type
+		dataType: string
+		lineageTag: 5d97b16e-da2e-5aa0-b3b4-698aed128288
+		summarizeBy: none
+		sourceColumn: payment_type
+
+	column amount
+		dataType: int64
+		formatString: 0
+		lineageTag: d753f79f-0431-5720-9191-372bf7102a4f
+		summarizeBy: sum
+		sourceColumn: amount
+
+	column signed_amount
+		dataType: int64
+		formatString: 0
+		lineageTag: f2c76486-75bf-588a-bac1-196427e1d3d1
+		summarizeBy: sum
+		sourceColumn: signed_amount
+
+	column balance_after
+		dataType: int64
+		formatString: 0
+		lineageTag: a96d91da-aa03-56fe-924d-14b18a41a1e1
+		summarizeBy: sum
+		sourceColumn: balance_after
+
+	column partner_bank
+		dataType: string
+		lineageTag: 86e00aab-af20-54a5-9bd2-f3119385d349
+		summarizeBy: none
+		sourceColumn: partner_bank
+
+	partition fct_transactions = m
+		mode: import
+		source =
+				let
+				    Source = PostgreSQL.Database(Server, Database),
+				    Data = Source{[Schema="marts", Item="fct_transactions"]}[Data]
+				in
+				    Data
+

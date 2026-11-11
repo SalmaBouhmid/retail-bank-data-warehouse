@@ -1,0 +1,77 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
+  "name": "rk_region",
+  "position": {
+    "x": 1020,
+    "y": 240,
+    "z": 0,
+    "height": 460,
+    "width": 240
+  },
+  "visual": {
+    "visualType": "clusteredBarChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_district"
+                    }
+                  },
+                  "Property": "region"
+                }
+              },
+              "queryRef": "dim_district.region",
+              "nativeQueryRef": "region",
+              "active": true
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fct_loans"
+                    }
+                  },
+                  "Property": "Taux de défaut"
+                }
+              },
+              "queryRef": "fct_loans.Taux de défaut",
+              "nativeQueryRef": "Taux de défaut"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Taux de défaut par région de l'agence'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

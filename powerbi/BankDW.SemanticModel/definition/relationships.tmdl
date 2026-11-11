@@ -1,0 +1,75 @@
+relationship 434f7f6a-c5d0-5940-815d-27379229971b
+	fromColumn: fct_transactions.account_id
+	toColumn: dim_account.account_id
+
+relationship 71025524-0c72-5e71-ba79-6d61f21db670
+	fromColumn: fct_transactions.owner_client_id
+	toColumn: dim_client.client_id
+
+relationship 6fc8da71-3d75-59b7-9f5e-fc0a32ecaad8
+	fromColumn: fct_transactions.district_id
+	toColumn: dim_district.district_id
+
+relationship b753ebb0-6b4c-5abd-ad29-34e6214971aa
+	fromColumn: fct_transactions.transaction_date
+	toColumn: dim_date.date_day
+
+relationship c2444ae0-605b-501d-ab3c-0ad51cca2b9c
+	fromColumn: fct_monthly_balance.account_id
+	toColumn: dim_account.account_id
+
+relationship 5c1375f8-327f-5763-891a-8328dd701099
+	fromColumn: fct_monthly_balance.owner_client_id
+	toColumn: dim_client.client_id
+
+relationship e00092bb-39a1-5e71-9bd9-c19972a00883
+	fromColumn: fct_monthly_balance.district_id
+	toColumn: dim_district.district_id
+
+relationship 2c4f9dad-0466-5b8e-9fc9-aa1e2fd3ae7c
+	fromColumn: fct_monthly_balance.month_start
+	toColumn: dim_date.date_day
+
+relationship e9a60bd2-4bc7-51c4-a567-5335b3259a94
+	fromColumn: fct_loans.account_id
+	toColumn: dim_account.account_id
+
+relationship 967b7448-db23-5c74-8b13-c2aebb82a1f1
+	fromColumn: fct_loans.owner_client_id
+	toColumn: dim_client.client_id
+
+relationship a0501233-6639-509e-bb53-e2ca538f488c
+	fromColumn: fct_loans.district_id
+	toColumn: dim_district.district_id
+
+relationship 4539c6b9-f8d4-558b-9514-d88ea39b5df6
+	fromColumn: fct_loans.granted_on
+	toColumn: dim_date.date_day
+
+relationship ac5096e3-98e2-5848-bcae-2f8008fbc20d
+	fromColumn: fct_cards.client_id
+	toColumn: dim_client.client_id
+
+relationship 5b1d4c30-53be-526f-abd0-c73026570093
+	fromColumn: fct_cards.account_id
+	toColumn: dim_account.account_id
+
+relationship 4cf6f188-b702-574f-9897-97ed246fb360
+	fromColumn: fct_cards.issued_on
+	toColumn: dim_date.date_day
+
+relationship 8bae0b93-35bd-4065-a4a5-07e907c63fb9
+	joinOnDateBehavior: datePartOnly
+	fromColumn: dim_client.birth_date
+	toColumn: LocalDateTable_24bc6c5b-c98c-4eee-ab1f-f51d58490f3a.Date
+
+relationship 36269872-eb85-4a77-ba9f-e395c3aaeeb2
+	joinOnDateBehavior: datePartOnly
+	fromColumn: dim_account.opened_on
+	toColumn: LocalDateTable_4c009cd9-a8f6-4ad2-bcbf-56c117a207cd.Date
+
+relationship 93e131b5-9055-4221-9d24-af73625dd2c2
+	joinOnDateBehavior: datePartOnly
+	fromColumn: check_results.checked_at
+	toColumn: LocalDateTable_917eba03-bd27-46c4-a626-d0e4b46401c9.Date
+

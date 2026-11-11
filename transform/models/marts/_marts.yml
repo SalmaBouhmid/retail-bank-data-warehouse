@@ -31,7 +31,7 @@ models:
         data_tests:
           - not_null
           - accepted_values:
-              arguments: {values: ["under 18", "18-24", "25-34", "35-44", "45-54", "55-64", "65+"]}
+              arguments: {values: ["0-17", "18-24", "25-34", "35-44", "45-54", "55-64", "65+"]}
       - name: district_id
         data_tests:
           - relationships:
@@ -123,6 +123,11 @@ models:
               arguments: {to: ref('dim_date'), field: date_day}
       - name: is_default
         data_tests: [not_null]
+      - name: amount_band
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments: {values: ["< 50k", "50k-100k", "100k-200k", "200k-300k", "300k+"]}
 
   - name: fct_cards
     description: One row per card issued.

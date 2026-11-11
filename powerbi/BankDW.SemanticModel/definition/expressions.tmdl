@@ -1,0 +1,12 @@
+/// Server and port of the PostgreSQL warehouse (docker compose)
+expression Server = "localhost:5434" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=true]
+	lineageTag: da60a472-d629-5606-a520-b4e1f6a93e36
+
+	annotation PBI_ResultType = Text
+
+/// Name of the warehouse database
+expression Database = "bank_dw" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=true]
+	lineageTag: 00062f3a-249e-57d0-aadd-8f0990798e86
+
+	annotation PBI_ResultType = Text
+

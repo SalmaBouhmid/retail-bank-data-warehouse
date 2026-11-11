@@ -1,0 +1,123 @@
+table dim_district
+	lineageTag: 976e38ee-69bf-5548-b98e-1fbac00913e3
+
+	column district_id
+		dataType: int64
+		isKey
+		formatString: 0
+		lineageTag: f4bb05a7-0ca3-56b2-83d8-ee2ca95759ec
+		summarizeBy: none
+		sourceColumn: district_id
+
+	column district_name
+		dataType: string
+		lineageTag: 9b198a4a-cd56-52f2-893d-daaa90ad19ff
+		summarizeBy: none
+		sourceColumn: district_name
+
+	column region
+		dataType: string
+		lineageTag: 49236d2e-17ea-5d12-a9a9-cee1f83bb7d2
+		summarizeBy: none
+		sourceColumn: region
+
+	column inhabitants
+		dataType: int64
+		formatString: 0
+		lineageTag: 96e34545-e9dd-5472-a339-1d24cf1ce7a7
+		summarizeBy: sum
+		sourceColumn: inhabitants
+
+	column municipalities_under_500
+		dataType: int64
+		formatString: 0
+		lineageTag: 16490cf0-f63c-5abe-9466-44077b27cb2d
+		summarizeBy: sum
+		sourceColumn: municipalities_under_500
+
+	column municipalities_500_1999
+		dataType: int64
+		formatString: 0
+		lineageTag: 2495d29e-0fab-595f-a8ba-47b8db6d7989
+		summarizeBy: sum
+		sourceColumn: municipalities_500_1999
+
+	column municipalities_2000_9999
+		dataType: int64
+		formatString: 0
+		lineageTag: bb244f73-8544-58c5-9d5b-12f39bd3f219
+		summarizeBy: sum
+		sourceColumn: municipalities_2000_9999
+
+	column municipalities_10000_plus
+		dataType: int64
+		formatString: 0
+		lineageTag: bdf98631-6b0c-5b26-af55-4d897b74471f
+		summarizeBy: sum
+		sourceColumn: municipalities_10000_plus
+
+	column cities
+		dataType: int64
+		formatString: 0
+		lineageTag: dc3965b5-6e49-5554-a5e2-615d5bc5897c
+		summarizeBy: sum
+		sourceColumn: cities
+
+	column urban_ratio_pct
+		dataType: double
+		formatString: #,0.00
+		lineageTag: 58d41675-a0ca-5e40-b288-9437c824ca9d
+		summarizeBy: sum
+		sourceColumn: urban_ratio_pct
+
+	column average_salary
+		dataType: int64
+		formatString: 0
+		lineageTag: 2073c8f4-526c-59e4-9e1a-43a7ac5322d3
+		summarizeBy: sum
+		sourceColumn: average_salary
+
+	column unemployment_rate_1995
+		dataType: double
+		formatString: #,0.00
+		lineageTag: 86de4082-6b15-59ed-99cd-a1c8abebacb2
+		summarizeBy: sum
+		sourceColumn: unemployment_rate_1995
+
+	column unemployment_rate_1996
+		dataType: double
+		formatString: #,0.00
+		lineageTag: 1a72d879-1196-5473-b470-4e542f99784c
+		summarizeBy: sum
+		sourceColumn: unemployment_rate_1996
+
+	column entrepreneurs_per_1000
+		dataType: int64
+		formatString: 0
+		lineageTag: 3520ce8c-ba1e-5197-93bb-1a2bbb8bcd12
+		summarizeBy: sum
+		sourceColumn: entrepreneurs_per_1000
+
+	column crimes_1995
+		dataType: int64
+		formatString: 0
+		lineageTag: 126f1824-3369-5d73-a0cc-76182b1dd494
+		summarizeBy: sum
+		sourceColumn: crimes_1995
+
+	column crimes_1996
+		dataType: int64
+		formatString: 0
+		lineageTag: fe910f11-b62e-54ff-a5eb-69796df300cf
+		summarizeBy: sum
+		sourceColumn: crimes_1996
+
+	partition dim_district = m
+		mode: import
+		source =
+				let
+				    Source = PostgreSQL.Database(Server, Database),
+				    Data = Source{[Schema="marts", Item="dim_district"]}[Data]
+				in
+				    Data
+
